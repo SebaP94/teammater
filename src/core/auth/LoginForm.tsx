@@ -1,17 +1,17 @@
 import React, { useCallback } from 'react'
 import { Flex, Button, Text } from '@chakra-ui/react'
-import { FormControl, FormLabel, Input, FormHelperText } from '@chakra-ui/react'
+import { FormControl, FormLabel, Input } from '@chakra-ui/react'
 // import { FcGoogle } from 'react-icons/fc'
 // import { AiOutlineFacebook, AiOutlineMail } from 'react-icons/ai'
 // import { Icon } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { colorScheme, toaster } from '../../shared/UIsettings'
 import app from '../../base'
-import { useToast } from '@chakra-ui/react'
 
 import { formModeProps } from './SingUp'
 
-export const RegisterForm = ({ setMode, onClose }: formModeProps) => {
+export const LoginForm = ({ setMode, onClose }: formModeProps) => {
   const { register, errors, handleSubmit } = useForm({
     reValidateMode: 'onChange',
     criteriaMode: 'firstError',
@@ -24,39 +24,26 @@ export const RegisterForm = ({ setMode, onClose }: formModeProps) => {
       try {
         await app
           .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            toast({
-              title: 'Gratulacje!',
-              description: 'Konto zostało utworzone.',
-              status: 'success',
-              position: toaster.position,
-              duration: toaster.duration,
-              isClosable: true,
-            })
-            onClose()
-          })
+          .signInWithEmailAndPassword(email, password)
+          .then(onClose)
       } catch (error) {
-        console.log(error)
+        toast({
+          title: 'Nie udało się zalogować.',
+          description: error.message,
+          status: 'error',
+          position: toaster.position,
+          duration: toaster.duration,
+          isClosable: true,
+        })
       }
     },
     [],
   )
-
-  // const onSubmit = useCallback({email, password}: {email: string, password: string}) => {
-  //   try {
-  //     await app
-  //       .auth()
-  //       .createUserWithEmailAndPassword(email, password);
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
   return (
     <>
       <Flex direction="column" justifyContent="center">
         <Flex className="form" py={2} flexDirection="column">
-          <form id="register-form" onSubmit={handleSubmit(onSubmit)}>
+          <form id="login-form" onSubmit={handleSubmit(onSubmit)}>
             <FormControl>
               <FormLabel>Adres e-mail</FormLabel>
               <Input
@@ -109,9 +96,9 @@ export const RegisterForm = ({ setMode, onClose }: formModeProps) => {
             variant="outline"
             colorScheme={colorScheme.primary}
             type="submit"
-            form="register-form"
+            form="login-form"
           >
-            Zarejestruj
+            Zaloguj się
           </Button>
         </Flex>
       </Flex>
