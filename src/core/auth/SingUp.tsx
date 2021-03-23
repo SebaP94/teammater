@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { Flex, Button, ButtonGroup, Text } from '@chakra-ui/react'
+import { Flex, Button, Box, Text } from '@chakra-ui/react'
 import { useDisclosure } from '@chakra-ui/react'
 import { MdAccountCircle } from 'react-icons/md'
 import { Icon } from '@chakra-ui/react'
@@ -14,22 +14,12 @@ import {
 } from '@chakra-ui/react'
 import { ColorModeSwitcher } from '../../ColorModeSwitcher'
 import { colorScheme, border } from '../../shared/UIsettings'
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuIcon,
-  MenuCommand,
-  MenuDivider,
-} from '@chakra-ui/react'
+import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
+import { RegisterForm } from './RegisterForm'
 
 type signInModes = 'choose' | 'register' | 'login'
 
-export const SignUpForm = () => {
+export const SignUp = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [mode, setMode] = useState<'choose' | 'register' | 'login'>('choose')
 
@@ -73,8 +63,8 @@ export const SignUpForm = () => {
 
           <ColorModeSwitcher></ColorModeSwitcher>
           <MenuList>
-            <MenuItem onClick={(e) => onOpenLogin()}>Zaloguj się</MenuItem>
-            <MenuItem onClick={(e) => onOpenRegister()}>Zarejestruj</MenuItem>
+            <MenuItem onClick={() => onOpenLogin()}>Zaloguj się</MenuItem>
+            <MenuItem onClick={() => onOpenRegister()}>Zarejestruj</MenuItem>
           </MenuList>
         </Menu>
       </Flex>
@@ -82,7 +72,7 @@ export const SignUpForm = () => {
       <Modal isOpen={isOpen} onClose={onCloseHandler}>
         <ModalOverlay />
         <ModalContent p={2}>
-          <ModalHeader>Zaloguj się</ModalHeader>
+          <ModalHeader>{getTitle(mode)}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{renderModes(mode)}</ModalBody>
         </ModalContent>
@@ -91,7 +81,16 @@ export const SignUpForm = () => {
   )
 }
 
-type formModeProps = { setMode: (mode: signInModes) => void }
+const getTitle = (mode: signInModes) => {
+  const titles: Record<signInModes, string> = {
+    choose: 'Zaloguj się',
+    register: 'Zarejestruj się',
+    login: 'Zaloguj sei',
+  }
+  return titles[mode]
+}
+
+export type formModeProps = { setMode: (mode: signInModes) => void }
 
 const LoginOrRegister = ({ setMode }: formModeProps) => (
   <Flex direction="column">
@@ -112,7 +111,7 @@ const LoginOrRegister = ({ setMode }: formModeProps) => (
       colorScheme={colorScheme.secondary}
       onClick={(e) => setMode('register')}
     >
-      <Text fontSize="lg">Zarejestruj</Text>
+      <Text fontSize="lg">Zarejestruj się</Text>
     </Button>
   </Flex>
 )
@@ -129,29 +128,6 @@ const LoginForm = ({ setMode }: formModeProps) => (
         onClick={(e) => setMode('choose')}
       >
         Zaloguj
-      </Button>
-      <Button
-        variant="outline"
-        colorScheme={colorScheme.secondary}
-        onClick={(e) => setMode('choose')}
-      >
-        Powrót
-      </Button>
-    </Flex>
-  </Flex>
-)
-const RegisterForm = ({ setMode }: formModeProps) => (
-  <Flex direction="column">
-    <Flex className="form" py={8}>
-      Register form
-    </Flex>
-    <Flex direction="row" justifyContent="space-between" w="full" my={2}>
-      <Button
-        variant="outline"
-        colorScheme={colorScheme.primary}
-        onClick={(e) => setMode('choose')}
-      >
-        Zarejestruj
       </Button>
       <Button
         variant="outline"

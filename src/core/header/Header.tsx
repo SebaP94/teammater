@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { SignUpForm } from '../auth/SignUpForm'
+import { SignUp } from '../auth/SingUp'
 
 export const Header = () => {
   return (
     <>
-      <SignUpForm></SignUpForm>
+      <SignUp></SignUp>
     </>
   )
 }
